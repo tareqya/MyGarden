@@ -1,0 +1,80 @@
+package com.example.finalproject;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
+import android.media.Image;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ListView;
+
+import com.example.finalproject.main.HomeFragment;
+import com.example.finalproject.main.MygardenFragment;
+import com.example.finalproject.main.ProfileFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.ArrayList;
+
+public class PlantsList extends AppCompatActivity {
+    private HomeFragment homeFragment;
+    private MygardenFragment mygardenFragment;
+    private ProfileFragment profileFragment;
+    private FrameLayout main_frame_home, main_frame_addplant, main_frame_profile;
+    private BottomNavigationView btnhome;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_plants_list);
+        main_frame_home = findViewById(R.id.main_frame_home);
+        main_frame_addplant= findViewById(R.id.main_frame_addproduct);
+        main_frame_profile = findViewById(R.id.main_frame_profile);
+        btnhome = findViewById(R.id.btnhome);
+        start();
+
+    }
+    private void start() {
+
+        homeFragment = new HomeFragment(this);
+        getSupportFragmentManager().beginTransaction().add(R.id.main_frame_home, homeFragment).commit();
+
+        mygardenFragment = new MygardenFragment(this);
+        getSupportFragmentManager().beginTransaction().add(R.id.main_frame_addproduct, mygardenFragment).commit();
+
+        profileFragment = new ProfileFragment(this);
+        getSupportFragmentManager().beginTransaction().add(R.id.main_frame_profile, profileFragment).commit();
+
+
+        main_frame_profile.setVisibility(View.INVISIBLE);
+        main_frame_addplant.setVisibility(View.INVISIBLE);
+
+        btnhome.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.home) {
+                    main_frame_profile.setVisibility(View.INVISIBLE);
+                    main_frame_addplant.setVisibility(View.INVISIBLE);
+                    main_frame_home.setVisibility(View.VISIBLE);
+                } else if (item.getItemId() == R.id.profile) {
+                    main_frame_profile.setVisibility(View.VISIBLE);
+                    main_frame_addplant.setVisibility(View.INVISIBLE);
+                    main_frame_home.setVisibility(View.INVISIBLE);
+                } else if (item.getItemId() == R.id.addplant) {
+                    main_frame_profile.setVisibility(View.INVISIBLE);
+                    main_frame_addplant.setVisibility(View.VISIBLE);
+                    main_frame_home.setVisibility(View.INVISIBLE);
+                }
+
+                return true;
+            }
+        });
+
+
+
+    }
+}

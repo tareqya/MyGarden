@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".plantDetails">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/zytoon" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zaytoon"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"/>
+    <LinearLayout
+        android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+
+    <TextView
+        android:id="@+id/plant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Plant Name"
+        android:textSize="25sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description:"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/plant_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Watering the plant"
+        android:textSize="25sp" />
+</LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="170dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/addToMyGarden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" + Add To My Garden"
+            android:textSize="25sp"
+            android:backgroundTint="@android:color/holo_green_dark" >
+
+        </Button>
+        <Button
+            android:id="@+id/backbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Back"
+            android:layout_marginLeft="20sp"
+            android:backgroundTint="@android:color/holo_green_dark">
+
+        </Button>
+
+    </LinearLayout>
+
+</LinearLayout>
