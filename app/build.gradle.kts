@@ -32,7 +32,7 @@ android {
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-auth:22.3.0")
-    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")

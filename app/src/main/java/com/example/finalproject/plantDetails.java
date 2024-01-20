@@ -2,61 +2,74 @@ package com.example.finalproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.finalproject.main.MygardenFragment;
-
-import java.io.ByteArrayOutputStream;
+import com.bumptech.glide.Glide;
+import com.example.finalproject.information.Plant;
+import com.example.finalproject.main.HomeFragment;
 
 public class plantDetails extends AppCompatActivity {
-private Button addbt,backbt;
-private ImageView plantIM;
-    @SuppressLint("WrongThread")
+
+    private ImageView plantDetails_IV_plantImage;
+    private TextView plantDetails_TV_name;
+    private TextView plantDetails_TV_sunRequire;
+    private TextView plantDetails_TV_water;
+    private Button plantDetails_BTN_fev;
+    private Button plantDetails_BTN_back;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plant_details);
-        addbt= findViewById(R.id.addToMyGarden);
-        backbt=findViewById(R.id.backbutton);
-        addbt.setOnClickListener(new View.OnClickListener() {
+
+        Intent intent = getIntent();
+        Plant plant = (Plant) intent.getSerializableExtra(HomeFragment.SELECTED_PLANT);
+
+        findViews();
+        initVars();
+        displayData(plant);
+
+    }
+
+    private void findViews() {
+        plantDetails_IV_plantImage = findViewById(R.id.plantDetails_IV_plantImage);
+        plantDetails_TV_name = findViewById(R.id.plantDetails_TV_name);
+        plantDetails_TV_sunRequire = findViewById(R.id.plantDetails_TV_sunRequire);
+        plantDetails_TV_water = findViewById(R.id.plantDetails_TV_water);
+        plantDetails_BTN_fev = findViewById(R.id.plantDetails_BTN_fev);
+        plantDetails_BTN_back = findViewById(R.id.plantDetails_BTN_back);
+    }
+
+    private void initVars() {
+        plantDetails_BTN_fev.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(plantDetails.this, MyGarden.class);
-                startActivity(intent);
+            public void onClick(View view) {
+
             }
         });
 
-        backbt.setOnClickListener(new View.OnClickListener() {
+        plantDetails_BTN_back.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(plantDetails.this, PlantsList.class);
-                startActivity(intent);
-
+            public void onClick(View view) {
+                finish();
             }
         });
-        BitmapDrawable drawable = (BitmapDrawable) plantIM.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100,stream);
-        byte[] byteArray = stream.toByteArray();
-        Intent intent = new Intent(this, MygardenFragment.class);
-        intent.putExtra("image", byteArray);
-        startActivity(intent);
-        byteArray = getIntent().getByteArrayExtra("image");
-         bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+    }
 
-
-
-
-
+    private void displayData(Plant plant) {
+        Glide.with(this).load(plant.getImageUrl()).into(plantDetails_IV_plantImage);
+        plantDetails_TV_name.setText(plant.getName());
+        String msg = "Sun is require";
+        if(!plant.isSunRequire()){
+            msg = "Sun is not require";
+        }
+        plantDetails_TV_sunRequire.setText(msg);
+        plantDetails_TV_water.setText("Watering the plant " + plant.getWater() + " times per " + plant.getUnit());
 
     }
 }

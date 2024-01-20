@@ -1,6 +1,9 @@
 package com.example.finalproject.information;
 
-import com.google.firebase.database.Exclude;
+
+import com.google.firebase.firestore.Exclude;
+
+import java.util.ArrayList;
 
 public class User extends FirebaseId{
         private String fullName;
@@ -8,8 +11,11 @@ public class User extends FirebaseId{
         private String email;
         private String imagePath;
         private String imageUrl;
+        private ArrayList<String> myPlants;
 
-        public User() {}
+        public User() {
+            myPlants = new ArrayList<>();
+        }
 
         public String getFullName() {
             return fullName;
@@ -46,14 +52,25 @@ public class User extends FirebaseId{
             this.imagePath = imagePath;
             return this;
         }
-
+        @Exclude
         public String getImageUrl() {
             return imageUrl;
         }
-        @Exclude
+
         public User setImageUrl(String imageUrl) {
             this.imageUrl = imageUrl;
             return this;
+        }
+
+        @Exclude
+        public boolean addPlant(Plant plant){
+            for(String plantId: this.myPlants){
+                if(plantId.equals(plant.getId())){
+                    return false;
+                }
+            }
+            this.myPlants.add(plant.getId());
+            return true;
         }
     }
 

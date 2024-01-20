@@ -4,18 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
-import com.example.finalproject.Plant;
-import com.example.finalproject.PlantAdapter;
 import com.example.finalproject.R;
-
-import java.util.ArrayList;
 
 public class MygardenFragment extends Fragment {
     private Activity context;

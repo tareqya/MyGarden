@@ -1,8 +1,11 @@
 package com.example.finalproject.information;
 
-import com.google.firebase.database.Exclude;
 
-public class FirebaseId {
+import com.google.firebase.firestore.Exclude;
+
+import java.io.Serializable;
+
+public class FirebaseId implements Serializable {
     private String id;
 
     public FirebaseId() {

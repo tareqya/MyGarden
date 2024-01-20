@@ -59,31 +59,6 @@ ProfileFragment extends Fragment {
     }
 
     private void initVars() {
-        database.setUserCallBack(new UserCallBack() {
-            @Override
-            public void onUserLoginComplete(Task<AuthResult> task) {
-
-            }
-
-            @Override
-            public void onUserCreateComplete(Task<AuthResult> task) {
-
-            }
-
-            @Override
-            public void onUserDataSaveComplete(Task<Void> task) {
-
-            }
-
-            @Override
-            public void onUserFetchComplete(User user) {
-                displayUser(user);
-            }
-        });
-
-        String uid = database.getCurrentUser().getUid();
-        database.fetchUserData(uid);
-
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,5 +77,9 @@ ProfileFragment extends Fragment {
         if(user.getImageUrl() != null && !user.getImageUrl().isEmpty()){
             Glide.with(context).load(user.getImageUrl()).into(profileImageView);
         }
+    }
+
+    public void setUser(User user) {
+        displayUser(user);
     }
 }

@@ -11,11 +11,15 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.example.finalproject.callback.UserCallBack;
+import com.example.finalproject.information.User;
 import com.example.finalproject.main.HomeFragment;
 import com.example.finalproject.main.MygardenFragment;
 import com.example.finalproject.main.ProfileFragment;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.AuthResult;
 
 import java.util.ArrayList;
 
@@ -26,6 +30,7 @@ public class PlantsList extends AppCompatActivity {
     private FrameLayout main_frame_home, main_frame_addplant, main_frame_profile;
     private BottomNavigationView btnhome;
 
+    private Database database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,28 @@ public class PlantsList extends AppCompatActivity {
 
     }
     private void start() {
+        database = new Database();
+        database.setUserCallBack(new UserCallBack() {
+            @Override
+            public void onUserLoginComplete(Task<AuthResult> task) {
+
+            }
+
+            @Override
+            public void onUserCreateComplete(Task<AuthResult> task) {
+
+            }
+
+            @Override
+            public void onUserDataSaveComplete(Task<Void> task) {
+
+            }
+
+            @Override
+            public void onUserFetchComplete(User user) {
+                profileFragment.setUser(user);
+            }
+        });
 
         homeFragment = new HomeFragment(this);
         getSupportFragmentManager().beginTransaction().add(R.id.main_frame_home, homeFragment).commit();
@@ -74,7 +101,8 @@ public class PlantsList extends AppCompatActivity {
             }
         });
 
-
+        String uid = database.getCurrentUser().getUid();
+        database.fetchUserData(uid);
 
     }
 }
