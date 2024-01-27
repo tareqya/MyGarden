@@ -3,9 +3,10 @@ package com.example.finalproject.information;
 
 import com.google.firebase.firestore.Exclude;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User extends FirebaseId{
+public class User extends FirebaseId implements Serializable {
         private String fullName;
         private String phone;
         private String email;

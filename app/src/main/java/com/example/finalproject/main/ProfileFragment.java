@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.finalproject.Database;
+import com.example.finalproject.EditAccountActivity;
 import com.example.finalproject.MainActivity;
 import com.example.finalproject.R;
 import com.example.finalproject.callback.UserCallBack;
@@ -25,14 +26,16 @@ import com.google.firebase.auth.AuthResult;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class
-ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment {
+    public static final String CURRENT_USER = "CURRENT_USER";
     private Activity context;
     private Database database;
     private CircleImageView profileImageView;
     private TextView usernameTextView;
     private TextView emailTextView;
     private Button logoutButton ;
+    private Button editAccount;
+    private User currentUser;
 
     public ProfileFragment(Activity context) {
         // Required empty public constructor
@@ -55,6 +58,7 @@ ProfileFragment extends Fragment {
         usernameTextView = view.findViewById(R.id.usernameTextView);
         emailTextView = view.findViewById(R.id.emailTextView);
         logoutButton = view.findViewById(R.id.logoutButton);
+        editAccount = view.findViewById(R.id.editAccount);
 
     }
 
@@ -69,6 +73,15 @@ ProfileFragment extends Fragment {
                 context.finish();
             }
         });
+
+        editAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, EditAccountActivity.class);
+                intent.putExtra(CURRENT_USER, currentUser);
+                startActivity(intent);
+            }
+        });
     }
 
     private void displayUser(User user) {
@@ -80,6 +93,7 @@ ProfileFragment extends Fragment {
     }
 
     public void setUser(User user) {
+        currentUser = user;
         displayUser(user);
     }
 }

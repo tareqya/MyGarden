@@ -41,7 +41,14 @@
             android:textSize="30sp"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"/>
-
+        <Button
+            android:id="@+id/editAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Account"
+            android:backgroundTint="@color/cardview_dark_background"
+            android:textSize="30sp"
+            android:layout_gravity="center"/>
         <!-- Logout Button -->
         <Button
             android:id="@+id/logoutButton"

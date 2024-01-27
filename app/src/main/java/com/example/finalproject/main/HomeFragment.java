@@ -24,6 +24,7 @@ import com.example.finalproject.callback.PlantCallBack;
 import com.example.finalproject.callback.PlantListener;
 import com.example.finalproject.information.Plant;
 import com.example.finalproject.plantDetails;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 
@@ -66,6 +67,16 @@ public class HomeFragment extends Fragment {
                 fHome_RV_plants.setHasFixedSize(true);
                 fHome_RV_plants.setItemAnimator(new DefaultItemAnimator());
                 fHome_RV_plants.setAdapter(plantAdapter);
+            }
+
+            @Override
+            public void onPlantAddToUserGardenComplete(Task<Void> task) {
+
+            }
+
+            @Override
+            public void onUserGardenPlantsFetchComplete(ArrayList<Plant> plants) {
+
             }
         });
 

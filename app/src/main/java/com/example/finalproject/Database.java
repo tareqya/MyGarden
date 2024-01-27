@@ -20,12 +20,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
 public class Database {
     public static final String USERS_TABLE = "Users";
     public static final String PLANTS_TABLE = "Plants";
+    public static final String MY_GARDEN = "myGarden";
+
     private FirebaseAuth fAuth;
     private FirebaseStorage storage;
     private FirebaseFirestore db;
@@ -84,6 +87,7 @@ public class Database {
                     String imageUrl = downloadImageUrl(user.getImagePath());
                     user.setImageUrl(imageUrl);
                 }
+                user.setId(value.getId());
                 userCallBack.onUserFetchComplete(user);
             }
         });
@@ -103,6 +107,17 @@ public class Database {
         return downloadImageTask.getResult().toString();
     }
 
+    public boolean uploadImage(Uri imageUri, String imagePath){
+        try{
+            UploadTask uploadTask = storage.getReference(imagePath).putFile(imageUri);
+            while (!uploadTask.isComplete() && !uploadTask.isCanceled());
+            return true;
+        }catch (Exception e){
+            System.out.println(e.getMessage().toString());
+            return false;
+        }
+
+    }
 
     public void fetchPlants(){
         this.db.collection(PLANTS_TABLE).addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -123,4 +138,42 @@ public class Database {
         });
     }
 
+    public void addPlantToUserGarden(String uid, Plant plant){
+        this.db.collection(USERS_TABLE).document(uid)
+                .collection(MY_GARDEN)
+                .document(plant.getId()).set(plant)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        plantCallBack.onPlantAddToUserGardenComplete(task);
+                    }
+                });
+
+    }
+
+
+    public void fetchUserGarden(String uid){
+        this.db.collection(USERS_TABLE).document(uid).collection(MY_GARDEN)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                ArrayList<Plant> plants = new ArrayList<>();
+                for(DocumentSnapshot snapshot: value.getDocuments()){
+                    Plant plant = snapshot.toObject(Plant.class);
+                    plant.setId(snapshot.getId());
+                    if(plant.getImagePath() != null){
+                        String imageUrl = downloadImageUrl(plant.getImagePath());
+                        plant.setImageUrl(imageUrl);
+                    }
+                    plants.add(plant);
+                }
+
+                plantCallBack.onUserGardenPlantsFetchComplete(plants);
+            }
+        });
+    }
+
+    public void removePlantFromMyGarden(String uid, Plant plant) {
+        this.db.collection(USERS_TABLE).document(uid).collection(MY_GARDEN).document(plant.getId()).delete();
+    }
 }
