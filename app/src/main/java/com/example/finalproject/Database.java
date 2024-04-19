@@ -82,6 +82,7 @@ public class Database {
         this.db.collection(USERS_TABLE).document(uid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(value == null) return;
                 User user = value.toObject(User.class);
                 if(user.getImagePath() != null && !user.getImagePath().isEmpty()){
                     String imageUrl = downloadImageUrl(user.getImagePath());
@@ -124,6 +125,7 @@ public class Database {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 ArrayList<Plant> plants = new ArrayList<>();
+                if(value == null) return;
                 for(DocumentSnapshot snapshot : value.getDocuments()){
                     Plant plant = snapshot.toObject(Plant.class);
                     if(plant.getImagePath() != null){
@@ -158,6 +160,7 @@ public class Database {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 ArrayList<Plant> plants = new ArrayList<>();
+                if(value == null) return;
                 for(DocumentSnapshot snapshot: value.getDocuments()){
                     Plant plant = snapshot.toObject(Plant.class);
                     plant.setId(snapshot.getId());
