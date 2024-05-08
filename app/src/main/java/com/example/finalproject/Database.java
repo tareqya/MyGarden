@@ -5,11 +5,14 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.finalproject.callback.ImageUrlDownloadListener;
 import com.example.finalproject.callback.PlantCallBack;
 import com.example.finalproject.callback.UserCallBack;
 import com.example.finalproject.information.Plant;
 import com.example.finalproject.information.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Database {
     public static final String USERS_TABLE = "Users";
@@ -85,11 +89,24 @@ public class Database {
                 if(value == null) return;
                 User user = value.toObject(User.class);
                 if(user.getImagePath() != null && !user.getImagePath().isEmpty()){
-                    String imageUrl = downloadImageUrl(user.getImagePath());
-                    user.setImageUrl(imageUrl);
+                    downloadImageUrl(user.getImagePath(), new ImageUrlDownloadListener() {
+                        @Override
+                        public void onImageUrlDownloaded(String uri) {
+                            user.setImageUrl(uri);
+                            user.setId(value.getId());
+                            userCallBack.onUserFetchComplete(user);
+                        }
+
+                        @Override
+                        public void onImageUrlDownloadFailed(String err) {
+
+                        }
+                    });
+                }else{
+                    user.setId(value.getId());
+                    userCallBack.onUserFetchComplete(user);
                 }
-                user.setId(value.getId());
-                userCallBack.onUserFetchComplete(user);
+
             }
         });
 
@@ -102,10 +119,20 @@ public class Database {
         return this.fAuth.getCurrentUser();
     }
 
-    public String downloadImageUrl(String imagePath){
-        Task<Uri> downloadImageTask = storage.getReference().child(imagePath).getDownloadUrl();
-        while (!downloadImageTask.isComplete() && !downloadImageTask.isCanceled());
-        return downloadImageTask.getResult().toString();
+    public void downloadImageUrl(String imagePath, ImageUrlDownloadListener listener){
+        this.storage.getReference().child(imagePath).getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        listener.onImageUrlDownloaded(uri.toString());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        listener.onImageUrlDownloadFailed(e.getMessage());
+                    }
+                });
     }
 
     public boolean uploadImage(Uri imageUri, String imagePath){
@@ -126,16 +153,37 @@ public class Database {
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 ArrayList<Plant> plants = new ArrayList<>();
                 if(value == null) return;
+                AtomicInteger count = new AtomicInteger(value.size() - 1);
                 for(DocumentSnapshot snapshot : value.getDocuments()){
                     Plant plant = snapshot.toObject(Plant.class);
                     if(plant.getImagePath() != null){
-                        String imageUrl = downloadImageUrl(plant.getImagePath());
-                        plant.setImageUrl(imageUrl);
+                        downloadImageUrl(plant.getImagePath(), new ImageUrlDownloadListener() {
+                            @Override
+                            public void onImageUrlDownloaded(String uri) {
+                                plant.setImageUrl(uri);
+                                plant.setId(snapshot.getId());
+                                plants.add(plant);
+                                if(count.getAndDecrement() == 0){
+                                    plantCallBack.onPlantsFetchComplete(plants);
+                                }
+                            }
+
+                            @Override
+                            public void onImageUrlDownloadFailed(String err) {
+
+                            }
+                        });
+
+                    }else{
+                        plant.setId(snapshot.getId());
+                        plants.add(plant);
+                        if(count.getAndDecrement() == 0){
+                            plantCallBack.onPlantsFetchComplete(plants);
+                        }
                     }
-                    plant.setId(snapshot.getId());
-                    plants.add(plant);
+
                 }
-                plantCallBack.onPlantsFetchComplete(plants);
+
             }
         });
     }
@@ -161,17 +209,34 @@ public class Database {
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 ArrayList<Plant> plants = new ArrayList<>();
                 if(value == null) return;
+                AtomicInteger count = new AtomicInteger(value.size() - 1);
                 for(DocumentSnapshot snapshot: value.getDocuments()){
                     Plant plant = snapshot.toObject(Plant.class);
                     plant.setId(snapshot.getId());
                     if(plant.getImagePath() != null){
-                        String imageUrl = downloadImageUrl(plant.getImagePath());
-                        plant.setImageUrl(imageUrl);
-                    }
-                    plants.add(plant);
-                }
+                        downloadImageUrl(plant.getImagePath(), new ImageUrlDownloadListener() {
+                            @Override
+                            public void onImageUrlDownloaded(String uri) {
+                                plant.setImageUrl(uri);
+                                plants.add(plant);
+                                if(count.getAndDecrement() == 0){
+                                    plantCallBack.onUserGardenPlantsFetchComplete(plants);
+                                }
+                            }
 
-                plantCallBack.onUserGardenPlantsFetchComplete(plants);
+                            @Override
+                            public void onImageUrlDownloadFailed(String err) {
+
+                            }
+                        });
+
+                    }else{
+                        plants.add(plant);
+                        if(count.getAndDecrement() == 0){
+                            plantCallBack.onUserGardenPlantsFetchComplete(plants);
+                        }
+                    }
+                }
             }
         });
     }

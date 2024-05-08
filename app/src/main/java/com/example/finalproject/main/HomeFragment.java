@@ -25,6 +25,7 @@ import com.example.finalproject.callback.PlantListener;
 import com.example.finalproject.information.Plant;
 import com.example.finalproject.plantDetails;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class HomeFragment extends Fragment {
     public static final String SELECTED_PLANT = "SELECTED_PLANT";
     private Activity context;
     private RecyclerView fHome_RV_plants;
+    private CircularProgressIndicator fHome_PB_loading;
     private Database database = new Database();
 
     public HomeFragment(Activity context) {
@@ -50,9 +52,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void initVars() {
+        fHome_PB_loading.setVisibility(View.VISIBLE);
         database.setPlantCallBack(new PlantCallBack() {
             @Override
             public void onPlantsFetchComplete(ArrayList<Plant> plants) {
+                fHome_PB_loading.setVisibility(View.INVISIBLE);
                 PlantAdapter plantAdapter = new PlantAdapter(context, plants);
                 plantAdapter.setPlantListener(new PlantListener() {
                     @Override
@@ -84,6 +88,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void findViews(View view) {
+        fHome_PB_loading = view.findViewById(R.id.fHome_PB_loading);
         fHome_RV_plants = view.findViewById(R.id.fHome_RV_plants);
     }
 }
