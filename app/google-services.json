@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "565450463461",
-    "project_id": "jolnar-b14a3",
-    "storage_bucket": "jolnar-b14a3.appspot.com"
+    "project_number": "175482246231",
+    "project_id": "mygarden-2e03a",
+    "storage_bucket": "mygarden-2e03a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:565450463461:android:f0cf5234018721acb91c0c",
+        "mobilesdk_app_id": "1:175482246231:android:ac65542d0e0bd26035bf12",
         "android_client_info": {
           "package_name": "com.example.finalproject"
         }
@@ -15,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC6ccd8XWE8Jphpx2yn-iUX--ZDgteX5xs"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:565450463461:android:2e562257489c77d5b91c0c",
-        "android_client_info": {
-          "package_name": "com.example.firebase"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC6ccd8XWE8Jphpx2yn-iUX--ZDgteX5xs"
+          "current_key": "AIzaSyBX-YVZEkiX_F7isImWy2guddMiH78Ekio"
         }
       ],
       "services": {
